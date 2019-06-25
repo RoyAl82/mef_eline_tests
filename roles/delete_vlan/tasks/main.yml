@@ -1,0 +1,6 @@
+---
+- name: Removed VLANs
+  shell: vconfig rem {{net}}.{{item}}
+  ignore_errors: yes
+  with_sequence: start="{{ start|int }}" end="{{ end|int }}"
+

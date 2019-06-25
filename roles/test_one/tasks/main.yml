@@ -1,0 +1,10 @@
+- name: Copy Test 1 Script
+  copy:
+    src: "{{ role_path }}/files/ping.sh"
+    dest: /tmp/ping.sh
+
+- import_tasks: centos.yml
+  when: ansible_distribution == 'CentOS'
+
+- import_tasks: ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'

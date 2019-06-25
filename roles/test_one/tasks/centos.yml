@@ -1,0 +1,5 @@
+---
+- name: Running Script on Test 1
+  shell: ./ping.sh
+  args:
+    chdir: /tmp/

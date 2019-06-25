@@ -1,0 +1,39 @@
+---
+- name: Install  epel-release
+  yum:
+    name: "epel-release"
+
+- name: Install SCL
+  yum:
+    name: "centos-release-scl"
+    state: present
+
+- name: Install install Python 3.6 SCL
+  yum:
+    name: "rh-python36"
+    state: present
+
+- name: Install pip
+  yum:
+    name: "python-pip"
+
+- name: Upgrade pip
+  command: /opt/rh/rh-python36/root/usr/bin/pip  install --upgrade pip
+
+- name: Install Virtualenv
+  pip:
+    name: "virtualenv"
+
+- name: Install setuptools
+  pip:
+    name: "setuptools"
+
+- name: Installing requests module
+  pip:
+    name: "requests"
+    executable: /opt/rh/rh-python36/root/usr/bin/pip
+
+- name: Installing pythonping module
+  pip:
+    name: "pythonping"
+    executable: /opt/rh/rh-python36/root/usr/bin/pip

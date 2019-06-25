@@ -1,0 +1,18 @@
+---
+- name: Install vconfig (without 'args').
+  command: yum install vconfig.x86_64
+
+
+- name: Create VLANs
+  command: vconfig add {{net}} {{item}} up
+  with_sequence: start="{{ start|int }}" end="{{ end|int }}"
+
+- name: Config VLANs
+  command: ifconfig {{net}}.{{item}} 10.0.{{item}}.{{inet}}/24 up
+  with_sequence: start="{{ start|int }}" end="{{ end|int }}"
+
+#- name: Run Script to create VLANs
+#  shell: ./create_vlan.sh {{ net }} {{ item }} {{ inet }}
+#  args:
+#    chdir: /tmp/
+#  with_sequence: start="{{ start|int }}" end="{{ end|int }}"

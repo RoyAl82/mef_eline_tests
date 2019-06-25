@@ -1,0 +1,6 @@
+---
+- name: Running create EVC Script
+  shell: /opt/rh/rh-python36/root/usr/bin/python3 evc_request.py {{ controller_addr }} {{ controller_port }} {{ item }} create_evc
+  args:
+    chdir: /tmp/
+  with_sequence: start="{{ start}}" end="{{ end }}"

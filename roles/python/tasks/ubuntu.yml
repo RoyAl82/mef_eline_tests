@@ -1,0 +1,20 @@
+---
+- name: Install Pip in Ubuntu
+  apt:
+    name: "python3-pip"
+    state: latest
+
+- name: Install Python in Ubuntu
+  apt:
+    name: "python"
+    state: latest
+
+- name: Installing requests module
+  pip:
+    name: "requests"
+    executable: pip3
+
+- name: Installing pythonping module
+  pip:
+    name: "pythonping"
+    executable: pip3
