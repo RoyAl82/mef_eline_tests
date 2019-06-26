@@ -70,11 +70,11 @@ class Request():
 
     controller_port = None
 
-    file = "/tmp/circuits.txt"
+    file = "circuits.txt"
 
     url = "http://67.17.206.252:8181/api/kytos/mef_eline/v2/evc/"
 
-    name = "Test1"
+    name = "Test 1 Python script"
     interface_id_a = "00:00:6c:ec:5a:08:5f:75:10"
     interface_id_z = "00:00:6c:ec:5a:09:be:62:10"
 
@@ -93,6 +93,12 @@ class Request():
         self.url = "http://{}:{}/api/kytos/mef_eline/v2/evc/".format(controller_addr, controller_port)
 
     def save_circuit_request(self, data=None, mode=None):
+        """
+
+        :param data:
+        :param mode:
+        :return:
+        """
         exclude = 'Not Acceptable: This evc already exists.'
 
         if data and data != exclude:
@@ -102,34 +108,32 @@ class Request():
             io = None
 
             if os.path.isfile(self.file) and mode:
-                io = open(self.file, 'r+')
-                json_data = self.update_circuit_request(io, data)
+                json_data = self.update_circuit_request(data)
             elif os.path.isfile(self.file) and not mode:
-                io = open(self.file, 'w')
                 json_data = data
             else:
-                io = open(self.file, 'w')
                 json_data = self.create_circuit_request(data)
 
+            io = open(self.file, 'w')
             io.write(str(json_data))
             io.close()
 
-    def read_circuit_request(self, r_io=None):
+        elif not data and os.path.isfile(self.file):
+            os.remove(self.file)
 
-        if r_io:
+    def read_circuit_request(self):
+        """
+
+        :param r_io:
+        :return:
+        """
+        if os.path.isfile(self.file):
+            r_io = open(self.file, 'r')
 
             data = r_io.readlines()
             r_io.close()
 
             return eval("".join(data))
-        else:
-            if os.path.isfile(self.file):
-                r_io = open(self.file, 'r')
-
-                data = r_io.readlines()
-                r_io.close()
-
-                return eval("".join(data))
 
     def create_circuit_request(self, data=None):
         """
@@ -142,27 +146,42 @@ class Request():
 
         return d
 
-    def update_circuit_request(self, io=None, data=None):
+    def update_circuit_request(self, data=None):
+        """
 
-        if data and io:
+        :param io:
+        :param data:
+        :return:
+        """
 
-            file = self.read_circuit_request(io)
-
-            file.update({self.interface_id_a: {self.interface_id_z: {self.value: data}}})
-
-            return file
-
-        else:
+        if data:   # this is to add new circuits to an existing dict
 
             file = self.read_circuit_request()
 
-            file.get(self.interface_id_a).get(self.interface_id_z).pop(self.value)
+            if self.interface_id_a not in file.keys():
+                file.update(self.create_circuit_request(data))
+            elif self.interface_id_z not in file.get(self.interface_id_a).keys():
+                file.get(self.interface_id_a).update({self.interface_id_z: {self.value: data}})
+            elif self.value not in file.get(self.interface_id_a).get(self.interface_id_z).keys():
+                file.get(self.interface_id_a).get(self.interface_id_z).update({self.value: data})
 
-            if not file.keys(self.interface_id_a):
-                file.pop(self.interface_id_a)
+            return file
 
-            elif not file.get(self.interface_id_a).key(self.interface_id_z):
-                file.get(self.interface_id_a).pop(self.interface_id_z)
+        else:   # this is to delete the circuit from the dict and any empty keys on the dict
+
+            file = self.read_circuit_request()
+
+            while True:
+                if not file.keys():
+                    break
+                elif not file.get(self.interface_id_a).keys():
+                    file.pop(self.interface_id_a)
+                elif not file.get(self.interface_id_a).get(self.interface_id_z).keys():
+                    file.get(self.interface_id_a).pop(self.interface_id_z)
+                elif self.value in file.get(self.interface_id_a).get(self.interface_id_z).keys():
+                    file.get(self.interface_id_a).get(self.interface_id_z).pop(self.value)
+                else:
+                    break
 
             return file
 
@@ -268,7 +287,7 @@ class Request():
 
                     self.save_circuit_request(data, mode)
 
-                print(resp)
+                print(resp.text)
 
                 #     index_z = index_z + 1
                 # index_a = index_a + 1

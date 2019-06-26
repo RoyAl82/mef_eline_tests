@@ -3,16 +3,10 @@
   command: yum install vconfig.x86_64
 
 
-- name: Create VLANs
+- name: Create VLANs on CentOS
   command: vconfig add {{net}} {{item}} up
   with_sequence: start="{{ start|int }}" end="{{ end|int }}"
 
-- name: Config VLANs
+- name: Config VLANs on CentOS
   command: ifconfig {{net}}.{{item}} 10.0.{{item}}.{{inet}}/24 up
   with_sequence: start="{{ start|int }}" end="{{ end|int }}"
-
-#- name: Run Script to create VLANs
-#  shell: ./create_vlan.sh {{ net }} {{ item }} {{ inet }}
-#  args:
-#    chdir: /tmp/
-#  with_sequence: start="{{ start|int }}" end="{{ end|int }}"

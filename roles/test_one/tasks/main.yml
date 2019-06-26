@@ -3,6 +3,19 @@
     src: "{{ role_path }}/files/ping.sh"
     dest: /tmp/ping.sh
 
+- name: Changing perm of "ping.sh"
+  file:
+    path: /tmp/ping.sh
+    owner: root
+    group: root
+    mode: '755'
+
+- name: Copy Test 1 Python Script
+  copy:
+    src: "{{ role_path }}/files/ping.py"
+    dest: /tmp/ping.py
+
+
 - import_tasks: centos.yml
   when: ansible_distribution == 'CentOS'
 
