@@ -1,7 +1,7 @@
 ## Main Ansible playbook that will call all Roles
 ---
 #- name: Test Connection to Hosts
-#  hosts: all:!localhost
+#  hosts: all
 #  pre_tasks:
 #    - name: Generate KEY
 #      openssh_keypair:
@@ -13,7 +13,7 @@
 #        state: present
 #        key: "{{ lookup('file', 'id_rsa.pub') }}"
 #        path: /tmp/id_ssh_rsa
-
+#
 #  tasks:
 #    - name: Ping the Hosts
 #      ping:
@@ -45,18 +45,18 @@
     - name: Start Role delete_evc
       include_role:
         name: delete_evc
-#
-#- name: Delete VLan
-#  hosts: all:!localhost
-#  tasks:
-#    - name: Start Role delete_vlan
-#      include_role:
-#        name: delete_vlan
 
-#    - name: Start Role cleaning
-#      include_role:
-#        name: cleaning
-#
+- name: Delete VLan
+  hosts: all:!localhost
+  tasks:
+    - name: Start Role delete_vlan
+      include_role:
+        name: delete_vlan
+
+    - name: Start Role cleaning
+      include_role:
+        name: cleaning
+
 #- name: Delete Keys
 #  hosts: all
 #  tasks:

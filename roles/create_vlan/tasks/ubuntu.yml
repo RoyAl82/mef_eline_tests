@@ -1,12 +1,12 @@
 ---
-- name: Install vconfig
+- name: Install vconfig on Ubuntu
   apt:
     name: vlan
 
-- name: Create Vlan
+- name: Create Vlan on Ubuntu
   shell: "vconfig add {{ net }} {{ item|int }} up"
   with_sequence: start="{{start}}" end="{{end}}"
 
-- name: Activating Vlan
+- name: Activating Vlan on Ubuntu
   shell: "ifconfig {{ net }}.{{ item|int }} 10.0.{{ item|int }}.{{ inet|int }}/24 up"
   with_sequence: start="{{ start }}" end="{{ end }}"

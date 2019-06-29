@@ -1,20 +1,8 @@
 ---
-#- name: Copy EVC Script
-#  copy:
-#    src: "{{ role_path }}/files/create_vlan.sh"
-#    dest: /tmp/create_vlan.sh
-
 - name: Removed VLANs
   shell: vconfig rem {{net}}.{{item}}
   ignore_errors: yes
   with_sequence: start="{{ start|int }}" end="{{ end|int }}"
-
-#- name: Changing perm of "create_vlan.sh"
-#  file:
-#    path: /tmp/create_vlan.sh
-#    owner: root
-#    group: root
-#    mode: '755'
 
 - include_tasks: centos.yml
   when: ansible_distribution == 'CentOS'
